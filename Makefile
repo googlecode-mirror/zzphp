@@ -1,7 +1,7 @@
-srcdir = /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz
-builddir = /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz
-top_srcdir = /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz
-top_builddir = /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz
+srcdir = /Users/suporte/C_workspace/funcoes_zz
+builddir = /Users/suporte/C_workspace/funcoes_zz
+top_srcdir = /Users/suporte/C_workspace/funcoes_zz
+top_builddir = /Users/suporte/C_workspace/funcoes_zz
 EGREP = /usr/bin/grep -E
 SED = /usr/bin/sed
 CONFIGURE_COMMAND = './configure'
@@ -19,7 +19,7 @@ prefix = /usr
 exec_prefix = $(prefix)
 libdir = ${exec_prefix}/lib
 prefix = /usr
-phplibdir = /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz/modules
+phplibdir = /Users/suporte/C_workspace/funcoes_zz/modules
 phpincludedir = /usr/include/php
 CC = gcc
 CFLAGS = -g -O2
@@ -33,7 +33,7 @@ EXTENSION_DIR = /usr/lib/php/extensions/no-debug-non-zts-20060613
 PHP_EXECUTABLE = /usr/bin/php
 EXTRA_LDFLAGS =
 EXTRA_LIBS =
-INCLUDES = -I/usr/include/php -I/usr/include/php/main -I/usr/include/php/TSRM -I/usr/include/php/Zend -I/usr/include/php/ext -I/usr/include/php/ext/date/lib -I/Users/suporte/estudo/php-5.2.6/ext/funcoes_zz//include
+INCLUDES = -I/usr/include/php -I/usr/include/php/main -I/usr/include/php/TSRM -I/usr/include/php/Zend -I/usr/include/php/ext -I/usr/include/php/ext/date/lib -I/Users/suporte/C_workspace/funcoes_zz/include
 LFLAGS =
 LDFLAGS =
 SHARED_LIBTOOL =
@@ -185,8 +185,8 @@ distclean: clean
 
 .PHONY: all clean install distclean test
 .NOEXPORT:
-funcoes_zz.lo: /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz/funcoes_zz.c
-	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/suporte/estudo/php-5.2.6/ext/funcoes_zz $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz/funcoes_zz.c -o funcoes_zz.lo 
+funcoes_zz.lo: /Users/suporte/C_workspace/funcoes_zz/funcoes_zz.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/suporte/C_workspace/funcoes_zz $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/suporte/C_workspace/funcoes_zz/funcoes_zz.c -o funcoes_zz.lo 
 $(phplibdir)/funcoes_zz.la: ./funcoes_zz.la
 	$(LIBTOOL) --mode=install cp ./funcoes_zz.la $(phplibdir)
 

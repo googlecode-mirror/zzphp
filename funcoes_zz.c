@@ -17,7 +17,6 @@
 */
 
 /* $Id: header,v 1.16.2.1.2.1 2007/01/01 19:32:09 iliaa Exp $ */
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -166,7 +165,7 @@ static void php_funcoes_zz_init_globals(zend_funcoes_zz_globals *funcoes_zz_glob
  */
 PHP_MINIT_FUNCTION(funcoes_zz)
 {
-	/* If you have INI entries, uncomment these lines 
+	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
 	*/
 	return SUCCESS;
@@ -227,35 +226,111 @@ PHP_MINFO_FUNCTION(funcoes_zz)
 PHP_FUNCTION(zzajuda){
 
 }
+char *execZZ(char *cmd ){
+  FILE *fp;
+  char *retorno;
+  char line[255];
+  char base[150]=  "/Users/suporte/Desktop/funcoeszz-8.9.sh  ";///home/www-data/funcoeszz-8.9.sh
+  fp = popen( strcat (base,cmd),"r"); //zzascii 1 1", "r");
+  retorno = (char *)calloc(30000,sizeof(char));
+  while ( fgets( line, sizeof line, fp))
+  {
+	    strcat (line,"\t");
+        strcat (retorno,line);
+       // strcat(retorno,"ivo \0");
+  }
+  pclose(fp);
+  return retorno;
+}
+char *trim_right( char *szSource )
+{
+	char *pszEOS = 0;
+	// Set pointer to character before terminating NULL
+	pszEOS = szSource + strlen( szSource ) - 1;
+	// iterate backwards until non '_' is found
+	while( (pszEOS >= szSource) && (*pszEOS == '_') )
+	*pszEOS-- = '\0';
+	return szSource;
+}
 PHP_FUNCTION(zzalfabeto){}
 PHP_FUNCTION(zzansi2html){}
 PHP_FUNCTION(zzarrumanome){}
 PHP_FUNCTION(zzascii){
   zval *dados;
-  FILE *fp;
-  int i = 0;
+  zval *idados;
   char *retorno;
-  char line[255];
-        ALLOC_INIT_ZVAL( dados );
-        array_init( dados );
-
-  fp = popen("/Users/suporte/estudo/funcoeszz-8.9.sh zzascii 1 1", "r");
-  retorno = (char *)calloc(30000,sizeof(char));
-	
-  while ( fgets( line, sizeof line, fp))
-  {
-	if (i==0){i++; continue;}
-	add_next_index_string( dados ,line,1);
-	//strncat (retorno,line,130);
-  }
-  pclose(fp);
-   //RETURN_STRING(retorno,3000);
-	RETURN_ZVAL(dados,1,0);	
+  char *search = "\t";
+  char *token,*ttoken;
+  char *p,*pp;
+  char *valor,*idx;
+  char *cmd=(char *)calloc(10,sizeof(char));
+  ALLOC_INIT_ZVAL( dados );
+  array_init( dados );
+  cmd =  " zzascii 1 1";
+  retorno = execZZ(cmd);
+ int i=0;
+ int j=0;
+  p = php_strtok_r(retorno, "\t", &token);
+  p = php_strtok_r(NULL, "\t", &token);
+	        while (p) {
+	        	ALLOC_INIT_ZVAL( idados );
+        	    array_init( idados );
+	        	valor = estrdup(p);
+	        	pp = php_strtok_r(valor," ", &ttoken);
+	        	i=0;
+	        	while(pp){
+	        		if (i==0) idx = estrdup(pp);
+	        		else
+		        	  add_next_index_string(idados,pp,0);
+		        	pp = php_strtok_r(NULL," ", &ttoken);
+	        		i++;
+	        	}
+	        	if (i>2)
+	        		add_assoc_zval(dados, idx, idados);
+	        	p = php_strtok_r(NULL, "\t", &token);
+	        }
+	RETURN_ZVAL(dados,1,0);
 }
 PHP_FUNCTION(zzbeep){}//sera que rola
 PHP_FUNCTION(zzbyte){}
 PHP_FUNCTION(zzcalcula){}
-PHP_FUNCTION(zzcalculaip){}
+PHP_FUNCTION(zzcalculaip){
+	  zval *dados;
+	  char *retorno;
+	  char *search = "\t";
+	  char *token,*ttoken;
+	  char *p,*pp;
+	  char *valor,*idx;
+	  char *cmd=(char *)calloc(40,sizeof(char));
+	  ALLOC_INIT_ZVAL( dados );
+	  array_init( dados );
+	  cmd =  " zzcalculaip 172.17.1.102 255.255.255.0";
+	  retorno = execZZ(cmd);
+//	  printf("%s",retorno);
+
+	  int i=0;
+	 int j=0;
+	  p = php_strtok_r(retorno, "\t", &token);
+	  p = php_strtok_r(NULL, "\t", &token);
+		        while (p) {
+		        	pp = php_strtok_r(p,":", &ttoken);
+		        	i=0;
+		        	while(pp){
+		        		if (i==0) idx = estrdup(pp);
+		        		else
+		        			valor = estrdup(pp);
+			        	pp = php_strtok_r(NULL,":", &ttoken);
+		        		i++;
+		        	}
+		        	if (i>=2)
+		        		add_assoc_stringl_ex ( dados, idx, 10, valor, 20, 1 );
+
+//		        		add_assoc_string(dados, idx, valor);
+		        	p = php_strtok_r(NULL, "\t", &token);
+		        }
+		RETURN_ZVAL(dados,1,0);
+
+}
 PHP_FUNCTION(zzchavegpg){}
 PHP_FUNCTION(zzcinclude){}
 PHP_FUNCTION(zzcnpj){}
@@ -334,9 +409,9 @@ PHP_FUNCTION(confirm_funcoes_zz_compiled)
 	RETURN_STRINGL(strg, len, 0);
 }
 /* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and 
-   unfold functions in source code. See the corresponding marks just before 
-   function definition, where the functions purpose is also documented. Please 
+/* The previous line is meant for vim and emacs, so it can correctly fold and
+   unfold functions in source code. See the corresponding marks just before
+   function definition, where the functions purpose is also documented. Please
    follow this convention for the convenience of others editing your code.
 */
 

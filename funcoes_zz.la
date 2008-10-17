@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/Users/suporte/estudo/php-5.2.6/ext/funcoes_zz/modules'
+libdir='/Users/suporte/C_workspace/funcoes_zz/modules'
