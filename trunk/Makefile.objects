@@ -1,5 +1,5 @@
-funcoes_zz.lo: /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz/funcoes_zz.c
-	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/suporte/estudo/php-5.2.6/ext/funcoes_zz $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/suporte/estudo/php-5.2.6/ext/funcoes_zz/funcoes_zz.c -o funcoes_zz.lo 
+funcoes_zz.lo: /Users/suporte/C_workspace/funcoes_zz/funcoes_zz.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/suporte/C_workspace/funcoes_zz $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/suporte/C_workspace/funcoes_zz/funcoes_zz.c -o funcoes_zz.lo 
 $(phplibdir)/funcoes_zz.la: ./funcoes_zz.la
 	$(LIBTOOL) --mode=install cp ./funcoes_zz.la $(phplibdir)
 

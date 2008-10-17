@@ -331,7 +331,7 @@ Copyright (C) 2006 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/Users/suporte/estudo/php-5.2.6/ext/funcoes_zz'
+ac_pwd='/Users/suporte/C_workspace/funcoes_zz'
 srcdir='.'
 # If no file are specified by the user, then we need to provide default
 # value.  By we need to know if files were specified by the user.

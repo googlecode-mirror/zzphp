@@ -41,6 +41,7 @@ PHP_RSHUTDOWN_FUNCTION(funcoes_zz);
 PHP_MINFO_FUNCTION(funcoes_zz);
 
 PHP_FUNCTION(confirm_funcoes_zz_compiled);	/* For testing, remove later. */
+char *ExecZZ(char *cmd);
 PHP_FUNCTION(zzajuda);
 PHP_FUNCTION(zzalfabeto);
 PHP_FUNCTION(zzansi2html);

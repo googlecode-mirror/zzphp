@@ -14,7 +14,7 @@ if test "$PHP_FUNCOES_ZZ" != "no"; then
   dnl Write more examples of tests here...
 
    # --with-funcoes_zz -> check with-path
-   SEARCH_PATH="/Users/suporte/estudo/php-5.2.6/ext/funcoes_zz/"     # you might want to change this
+   SEARCH_PATH="/Users/suporte/C_workspace/funcoes_zz"     # you might want to change this
    SEARCH_FOR="php_funcoes_zz.h"  # you most likely want to change this
    if test -r $PHP_FUNCOES_ZZ/$SEARCH_FOR; then # path given as parameter
      FUNCOES_ZZ_DIR=$PHP_FUNCOES_ZZ
