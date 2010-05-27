@@ -53,7 +53,17 @@ class ZZTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals ( strlen(ZZ::senha()),6);
 		$this->assertEquals ( strlen(ZZ::senha(10)),10);
 	}
-
+	public function testUniq(){
+		// I can put here a tmp folder but it depends of SO, so the temporary file was create at same dir of tests and delete after.
+		$f = "testeuniq.txt";
+		if (is_dir($f)){
+			exec("printf \"primeiro\nprimeiro\n\" > {$f}");
+			$ret = ZZ::uniq($f);
+			$this->assertEquals(count($ret), 1);
+			$this->assertEquals('primeiro', $ret[0]);
+			unlink($f);
+		}
+	}
     public function miniTesteCotacao($subcotacao)
     {
         $this->assertArrayHasKey('compra', $subcotacao);
