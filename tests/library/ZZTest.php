@@ -49,6 +49,10 @@ class ZZTest extends PHPUnit_Framework_TestCase
         $this->miniTesteCotacao($cotacao['Paralelo']);
         $this->miniTesteCotacao($cotacao['Turismo']);
     }
+	public function testSenha(){
+		$this->assertEquals ( strlen(ZZ::senha()),6);
+		$this->assertEquals ( strlen(ZZ::senha(10)),10);
+	}
 
     public function miniTesteCotacao($subcotacao)
     {
@@ -65,12 +69,10 @@ class ZZTest extends PHPUnit_Framework_TestCase
 
     public function miniTesteMoeda($submoeda)
     {
-
         $this->assertArrayHasKey('Compra', $submoeda);
         $this->assertArrayHasKey('Venda', $submoeda);
         $this->assertArrayHasKey('Var.%', $submoeda);
         $this->assertArrayHasKey('Hora', $submoeda);
         $this->assertArrayHasKey('Moeda', $submoeda);
     }
-
 }
