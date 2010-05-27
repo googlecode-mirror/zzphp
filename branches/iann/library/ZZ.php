@@ -105,4 +105,10 @@ abstract class ZZ
 				array($length)
 		);
 	}
+	public static function uniq($filepath){
+		return self::funcoeszz('uniq',
+				self::SAIDA_ARRAY,
+				array($filepath)
+		);
+	}
 }
