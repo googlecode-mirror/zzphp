@@ -66,7 +66,7 @@ abstract class ZZ
             throw new ZZ_SaidaInvalidaException($tratamento);
         }
         $shellArgs = implode(' ', $argumentos);
-        $zzsaida = shell_exec("funcoeszz $funcao $shellArgs");
+        $zzsaida = shell_exec( ((ZZPATH)?ZZPATH:"funcoeszz")." $funcao $shellArgs");
         $saidaTratada = call_user_func($tratamento, $zzsaida);
         if (false !== strpos($zzsaida, 'Função inexistente')) {
             throw new ZZ_FuncaoInvalidaException($funcao, 2);
