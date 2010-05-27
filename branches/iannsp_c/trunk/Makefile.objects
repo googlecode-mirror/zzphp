@@ -1,0 +1,8 @@
+funcoes_zz.lo: /Users/suporte/C_workspace/funcoes_zz/funcoes_zz.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/suporte/C_workspace/funcoes_zz $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/suporte/C_workspace/funcoes_zz/funcoes_zz.c -o funcoes_zz.lo 
+$(phplibdir)/funcoes_zz.la: ./funcoes_zz.la
+	$(LIBTOOL) --mode=install cp ./funcoes_zz.la $(phplibdir)
+
+./funcoes_zz.la: $(shared_objects_funcoes_zz) $(FUNCOES_ZZ_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_funcoes_zz) $(FUNCOES_ZZ_SHARED_LIBADD)
+
