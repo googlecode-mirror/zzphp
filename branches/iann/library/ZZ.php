@@ -99,4 +99,10 @@ abstract class ZZ
         );
     }
 
+	public static function senha($length=6){
+		return self::funcoeszz('senha',
+				self::SAIDA_TEXTO,
+				array($length)
+		);
+	}
 }
