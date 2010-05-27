@@ -1,5 +1,5 @@
 <?php
-
+define('ZZPATH','/opt/funcoeszz-8.10.sh');
 require_once 'PHPUnit/Framework.php';
 
 require_once dirname(__FILE__) . '/../../library/ZZ.php';
