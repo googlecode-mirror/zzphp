@@ -42,12 +42,12 @@ class ZZTest extends PHPUnit_Framework_TestCase
     public function testDolar()
     {
         $cotacao = ZZ::dolar();
-        $this->assertArrayHasKey('Comercial', $cotacao);
-        $this->assertArrayHasKey('Paralelo', $cotacao);
-        $this->assertArrayHasKey('Turismo', $cotacao);
-        $this->miniTesteCotacao($cotacao['Comercial']);
-        $this->miniTesteCotacao($cotacao['Paralelo']);
-        $this->miniTesteCotacao($cotacao['Turismo']);
+        $this->assertArrayHasKey('comercial', $cotacao);
+        $this->assertArrayHasKey('paralelo', $cotacao);
+        $this->assertArrayHasKey('turismo', $cotacao);
+        $this->miniTesteCotacao($cotacao['comercial']);
+        $this->miniTesteCotacao($cotacao['paralelo']);
+        $this->miniTesteCotacao($cotacao['turismo']);
     }
 
     public function miniTesteCotacao($subcotacao)
@@ -65,12 +65,39 @@ class ZZTest extends PHPUnit_Framework_TestCase
 
     public function miniTesteMoeda($submoeda)
     {
+        $this->assertArrayHasKey('compra', $submoeda);
+        $this->assertArrayHasKey('venda', $submoeda);
+        $this->assertArrayHasKey('var', $submoeda);
+        $this->assertArrayHasKey('hora', $submoeda);
+        $this->assertArrayHasKey('moeda', $submoeda);
+    }
 
-        $this->assertArrayHasKey('Compra', $submoeda);
-        $this->assertArrayHasKey('Venda', $submoeda);
-        $this->assertArrayHasKey('Var.%', $submoeda);
-        $this->assertArrayHasKey('Hora', $submoeda);
-        $this->assertArrayHasKey('Moeda', $submoeda);
+    public function testWhoisbrDominio()
+    {
+        $whoisbr = ZZ::whoisbr('google.com.br');
+        $this->assertTrue(is_array($whoisbr));
+        //amostragem
+        $this->assertArrayHasKey('dominio', $whoisbr);
+        $this->assertArrayHasKey('entidade', $whoisbr);
+    }
+
+    public function testWhoisbrID()
+    {
+        $whoisbr = ZZ::whoisbr('COAGO');
+        $this->assertTrue(is_array($whoisbr));
+        //amostragem
+        $this->assertArrayHasKey('id', $whoisbr);
+        $this->assertArrayHasKey('nome', $whoisbr);
+        $this->assertArrayHasKey('criado', $whoisbr);
+    }
+
+    public function testWhoisbrEntidade()
+    {
+        $whoisbr = ZZ::whoisbr('006.947.284/0001-04');
+        $this->assertTrue(is_array($whoisbr));
+        //amostragem
+        $this->assertArrayHasKey('entidade', $whoisbr);
+        $this->assertArrayHasKey('criado', $whoisbr);
     }
 
 }

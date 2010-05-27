@@ -25,10 +25,43 @@ abstract class ZZ
     const SAIDA_ARRAY = 'Array';
     const SAIDA_TABULAR = 'Tabular';
     const SAIDA_TEXTO = 'Texto';
+    const SAIDA_LISTA = 'Lista';
 
     protected static function transformArray($zzsaida)
     {
         return array_filter(explode(PHP_EOL, $zzsaida));
+    }
+
+    protected static function normalizar($nome)
+    {
+        $nome = htmlentities(strtolower(utf8_decode($nome)));
+        $nome = preg_replace('#&(.)(acute|cedil|circ|ring|tilde|uml);#', '$1', $nome);
+        $nome = preg_replace('#^[^A-Za-z0-9]*(.*)#', '$1', $nome);
+        $nome = preg_replace('#(.*?)[^A-Za-z0-9]*$#', '$1', $nome);
+        $nome = preg_replace('#[^A-Za-z0-9]#', '_', $nome);
+        return utf8_encode($nome);
+    }
+
+    protected static function transformLista($zzsaida)
+    {
+        $linhas = self::transformArray($zzsaida);
+        $resultados = array();
+        foreach ($linhas as $linha) {
+            $chaveValor = preg_split('#\s{2,}#', $linha);
+            $chaveValor[0] = self::normalizar($chaveValor[0]);
+            if (2 !== count($chaveValor))
+                continue;
+            if (isset($resultados[$chaveValor[0]])) {
+                if (is_array($resultados[$chaveValor[0]])) {
+                    $resultados[$chaveValor[0]][] = $chaveValor[1];
+                } else {
+                    $resultados[$chaveValor[0]] = array($resultados[$chaveValor[0]], $chaveValor[1]);
+                }
+            } else {
+                $resultados[$chaveValor[0]] = $chaveValor[1];
+            }
+        }
+        return $resultados;
     }
 
     protected static function transformTexto($zzsaida)
@@ -38,11 +71,11 @@ abstract class ZZ
 
     protected static function transformTabular($zzsaida)
     {
-        $linhas = array_filter(explode(PHP_EOL, $zzsaida));
+        $linhas = self::transformArray($zzsaida);
         $cabecalho = array();
         $resultados = array();
         foreach ($linhas as $numero => $linha) {
-            if ($numero === 0) {
+            if (0 === $numero) {
                 $cabecalho = preg_split('#\s+#', $linha);
                 continue;
             }
@@ -51,7 +84,8 @@ abstract class ZZ
                 $cabecalho += array_flip(range(0, count($cols) - 1));
                 $cols += array_flip(range(0, count($cabecalho) - 1));
             }
-            $resultados[array_shift($cols)] = array_combine(array_slice($cabecalho, 1), $cols);
+            $cabecalho = array_map(array(__CLASS__, 'normalizar'), $cabecalho);
+            $resultados[self::normalizar(array_shift($cols))] = array_combine(array_slice($cabecalho, 1), $cols);
         }
         return $resultados;
     }
@@ -96,6 +130,15 @@ abstract class ZZ
         return self::funcoeszz(
             'moeda',
             self::SAIDA_TABULAR
+        );
+    }
+
+    public static function whoisbr($alvo)
+    {
+        return self::funcoeszz(
+            'whoisbr',
+            self::SAIDA_LISTA,
+            array($alvo)
         );
     }
 
