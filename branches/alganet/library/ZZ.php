@@ -74,4 +74,13 @@ abstract class ZZ
         );
     }
 
+    public static function tempo($pais, $localidade=null)
+    {
+        return self::funcoeszz(
+            'tempo',
+            is_null($localidade) ? ZZ_ResultSet::LISTA : ZZ_ResultSet::TEXTO,
+            array_filter(func_get_args())
+        );
+    }
+
 }
