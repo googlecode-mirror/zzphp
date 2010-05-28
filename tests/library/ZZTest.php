@@ -99,4 +99,19 @@ class ZZTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('criado', $whoisbr->getArrayCopy());
     }
 
+    public function testTempoPais()
+    {
+        $tempo = ZZ::tempo('brazil');
+        //amostragem
+        $this->assertArrayHasKey('sbsp', $tempo->getArrayCopy());
+        $this->assertArrayHasKey('sbrj', $tempo->getArrayCopy());
+    }
+
+    public function testTempoPaisLocalidade()
+    {
+        $tempo = ZZ::tempo('brazil', 'sbsp');
+        //amostragem
+        $this->assertContains('Congonhas Aeroporto', (string) $tempo);
+    }
+
 }
