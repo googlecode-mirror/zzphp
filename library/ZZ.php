@@ -154,5 +154,17 @@ abstract class ZZ
             ZZ_ResultSet::TEXTO,
             array($cnpj)
         );
+    }
+    public static function contapalavra($filepath,$word, $ignoreCase=false, $partial=false){
+        $param = Array();
+        ($ignoreCase)?array_push($param, '-i'):"";
+        ($partial)?array_push($param, '-p'):"";
+        array_push($param, $word);
+        array_push($param, $filepath);
+        return self::funcoeszz(
+            'contapalavra',
+            ZZ_ResultSet::TEXTO,
+            $param
+        );
     }    
 }

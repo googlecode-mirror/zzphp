@@ -148,5 +148,16 @@ class ZZTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(strlen(ZZ::cnpj()), 18);
         $this->assertEquals(utf8_decode('CNPJ válido'), utf8_decode( ZZ::cnpj('12345678000195') ));
     }
-    
+    public function testContaPalavra(){
+        $f = "testecontapalvra.txt";
+    	exec("printf \"palavra\nprimeiro\nsegundo\ncod\ncodi\ncodigo\n\" > {$f}");
+        if (is_file($f)){
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', true, true));
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', false, true));
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', true, false));
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra'));
+            $this->assertEquals(3, (int) ZZ::contapalavra($f, 'cod',     false, true));
+        	unlink($f);
+        }
+    }
 }
