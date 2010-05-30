@@ -13,6 +13,9 @@ class ZZ_FuncaoInvalidaException extends ZZ_Exception
             case 2:
                 parent::__construct("'$funcao' não é uma função zz válida", $code);
                 break;
+            case 3:
+                parent::__construct("'$funcao' não é uma função coberta por este bind php", $code);
+                break;
         }
     }
 
