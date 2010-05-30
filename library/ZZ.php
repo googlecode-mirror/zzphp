@@ -2,6 +2,7 @@
 
 require_once 'ZZ/FuncaoInvalidaException.php';
 require_once 'ZZ/SaidaInvalidaException.php';
+require_once 'ZZ/ResultSet.php';
 
 abstract class ZZ
 {
@@ -22,63 +23,29 @@ abstract class ZZ
     const ALFABETO_PORTUGAL = 'portugal';
     const ALFABETO_NAMES = 'names';
     const ALFABETO_LAPD = 'lapd';
-    const SAIDA_ARRAY = 'Array';
-    const SAIDA_TABULAR = 'Tabular';
-    const SAIDA_TEXTO = 'Texto';
 
-    protected static function transformArray($zzsaida)
-    {
-        return array_filter(explode(PHP_EOL, $zzsaida));
-    }
-
-    protected static function transformTexto($zzsaida)
-    {
-        return trim($zzsaida);
-    }
-
-    protected static function transformTabular($zzsaida)
-    {
-        $linhas = array_filter(explode(PHP_EOL, $zzsaida));
-        $cabecalho = array();
-        $resultados = array();
-        foreach ($linhas as $numero => $linha) {
-            if ($numero === 0) {
-                $cabecalho = preg_split('#\s+#', $linha);
-                continue;
-            }
-            $cols = preg_split('#\s{2,}#', $linha);
-            if (count($cols) !== count($cabecalho)) {
-                $cabecalho += array_flip(range(0, count($cols) - 1));
-                $cols += array_flip(range(0, count($cabecalho) - 1));
-            }
-            $resultados[array_shift($cols)] = array_combine(array_slice($cabecalho, 1), $cols);
-        }
-        return $resultados;
-    }
-
-    public static function funcoeszz($funcao, $tratamento, array $argumentos=array())
+    public static function funcoeszz($funcao, $tipoDeResultado, array $argumentos=array())
     {
         if (!ctype_alnum($funcao)) {
             throw new ZZ_FuncaoInvalidaException($funcao, 1);
         }
-        $tratamento = array(__CLASS__, "transform$tratamento");
-        if (!method_exists($tratamento[0], $tratamento[1])) {
-            throw new ZZ_SaidaInvalidaException($tratamento);
+        if (!method_exists('ZZ_ResultSet', $tipoDeResultado)) {
+            throw new ZZ_SaidaInvalidaException($tipoDeResultado);
         }
+        $cmd = (defined('ZZPATH'))?ZZPATH:"funcoeszz";
         $shellArgs = implode(' ', $argumentos);
-        $zzsaida = shell_exec( ((ZZPATH)?ZZPATH:"funcoeszz")." $funcao $shellArgs");
-        $saidaTratada = call_user_func($tratamento, $zzsaida);
+        $zzsaida = shell_exec( "{$cmd} $funcao $shellArgs");
         if (false !== strpos($zzsaida, 'Função inexistente')) {
             throw new ZZ_FuncaoInvalidaException($funcao, 2);
         }
-        return $saidaTratada;
+        return new ZZ_ResultSet($zzsaida, $tipoDeResultado);
     }
 
     public static function alfabeto($tipo, $palavra)
     {
         return self::funcoeszz(
             'alfabeto',
-            self::SAIDA_ARRAY,
+            ZZ_ResultSet::ARR,
             array("--$tipo", $palavra)
         );
     }
@@ -87,7 +54,7 @@ abstract class ZZ
     {
         return self::funcoeszz(
             'dolar',
-            self::SAIDA_TABULAR
+            ZZ_ResultSet::TABELA
         );
     }
 
@@ -95,20 +62,76 @@ abstract class ZZ
     {
         return self::funcoeszz(
             'moeda',
-            self::SAIDA_TABULAR
+            ZZ_ResultSet::TABELA
         );
     }
 
-	public static function senha($length=6){
-		return self::funcoeszz('senha',
-				self::SAIDA_TEXTO,
-				array($length)
-		);
-	}
-	public static function uniq($filepath){
-		return self::funcoeszz('uniq',
-				self::SAIDA_ARRAY,
-				array($filepath)
-		);
-	}
+    public static function whoisbr($alvo)
+    {
+        return self::funcoeszz(
+            'whoisbr',
+            ZZ_ResultSet::LISTA,
+            array($alvo)
+        );
+    }
+
+    public static function tempo($pais, $localidade=null)
+    {
+        return self::funcoeszz(
+            'tempo',
+            is_null($localidade) ? ZZ_ResultSet::LISTA : ZZ_ResultSet::TEXTO,
+            array_filter(func_get_args())
+        );
+    }
+    public static function senha($length=6){
+        return self::funcoeszz(
+            'senha',
+            ZZ_ResultSet::TEXTO,
+            array($length)
+            );
+    }
+    public static function uniq($filepath){
+        return self::funcoeszz(
+            'uniq',
+            ZZ_ResultSet::ARR,
+            array($filepath)
+        );
+    }
+    public static function calcula($expr){
+        return self::funcoeszz(
+            'calcula',
+            ZZ_ResultSet::TEXTO,
+            array($expr)
+        );
+    }
+    public static function calculaip($ip, $netmask=null){
+        $param = Array($ip, $netmask);
+        return  self::funcoeszz(
+            'calculaip',
+            ZZ_ResultSet::LISTA,
+            $param
+        );
+    }
+    public static function ajuda($fct=null){
+        /* 
+            this function just make sense to return text
+            Every function from zz have your own help, make sense use this function to provide these help for functions and system.
+        */
+        if ( is_null($fct)){
+            return self::funcoeszz(
+              'ajuda',
+              ZZ_ResultSet::TEXTO
+            );
+        }else{
+            $rclass = new ReflectionClass('ZZ');
+            if (!$rclass->hasMethod($fct))
+                throw new ZZ_FuncaoInvalidaException($fct, 3);
+
+            return self::funcoeszz(
+                $fct,
+                ZZ_ResultSet::TEXTO,
+                array('--help')
+             );
+        }
+    }   
 }

@@ -6,13 +6,12 @@ require_once dirname(__FILE__) . '/../../library/ZZ.php';
 
 class ZZTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @expectedException ZZ_FuncaoInvalidaException
      */
     public function testFuncoeszzNomeInvalido()
     {
-        ZZ::funcoeszz('foo#bar%baz', ZZ::SAIDA_ARRAY);
+        ZZ::funcoeszz('foo#bar%baz', ZZ_ResultSet::ARR);
     }
 
     /**
@@ -20,17 +19,19 @@ class ZZTest extends PHPUnit_Framework_TestCase
      */
     public function testFuncoeszzFuncaoInexistente()
     {
-        ZZ::funcoeszz('helloween', ZZ::SAIDA_ARRAY);
+        ZZ::funcoeszz('helloween', ZZ_ResultSet::ARR);
     }
 
     public function testFuncoeszz()
     {
-        $this->assertContains(
-            'Ajuda das Funções ZZ',
-            ZZ::funcoeszz('ajuda', ZZ::SAIDA_TEXTO)
-        );
+        $this->assertContains('Ajuda das Funções ZZ',ZZ::funcoeszz('ajuda', ZZ_ResultSet::TEXTO)->toString());
+        
     }
 
+    public function testAjuda(){
+        $this->assertContains('Os operadores principais',               ZZ::ajuda('calcula')->toString());
+        $this->assertContains('Miniferramentas para auxiliar as',       ZZ::ajuda()->toString());
+    }
     public function testAlfabeto()
     {
         $this->assertEquals(
@@ -42,47 +43,97 @@ class ZZTest extends PHPUnit_Framework_TestCase
     public function testDolar()
     {
         $cotacao = ZZ::dolar();
-        $this->assertArrayHasKey('Comercial', $cotacao);
-        $this->assertArrayHasKey('Paralelo', $cotacao);
-        $this->assertArrayHasKey('Turismo', $cotacao);
-        $this->miniTesteCotacao($cotacao['Comercial']);
-        $this->miniTesteCotacao($cotacao['Paralelo']);
-        $this->miniTesteCotacao($cotacao['Turismo']);
+        $this->assertArrayHasKey('comercial', $cotacao->getArrayCopy());
+        $this->assertArrayHasKey('paralelo', $cotacao->getArrayCopy());
+        $this->assertArrayHasKey('turismo', $cotacao->getArrayCopy());
+        $this->miniTesteCotacao($cotacao['comercial']);
+        $this->miniTesteCotacao($cotacao['paralelo']);
+        $this->miniTesteCotacao($cotacao['turismo']);
+        $this->assertEquals($cotacao->comercial, $cotacao['comercial']);
     }
-	public function testSenha(){
-		$this->assertEquals ( strlen(ZZ::senha()),6);
-		$this->assertEquals ( strlen(ZZ::senha(10)),10);
-	}
-	public function testUniq(){
-		// I can put here a tmp folder but it depends of SO, so the temporary file was create at same dir of tests and delete after.
-		$f = "testeuniq.txt";
-		if (is_dir($f)){
-			exec("printf \"primeiro\nprimeiro\n\" > {$f}");
-			$ret = ZZ::uniq($f);
-			$this->assertEquals(count($ret), 1);
-			$this->assertEquals('primeiro', $ret[0]);
-			unlink($f);
-		}
-	}
+
     public function miniTesteCotacao($subcotacao)
     {
-        $this->assertArrayHasKey('compra', $subcotacao);
-        $this->assertArrayHasKey('venda', $subcotacao);
-        $this->assertArrayHasKey('hora', $subcotacao);
+        $this->assertArrayHasKey('compra', $subcotacao->getArrayCopy());
+        $this->assertArrayHasKey('venda', $subcotacao->getArrayCopy());
+        $this->assertArrayHasKey('hora', $subcotacao->getArrayCopy());
     }
 
     public function testMoeda()
     {
         $moeda = ZZ::moeda();
-        foreach ($moeda as $submoeda) $this->miniTesteMoeda($submoeda);
+        foreach ($moeda as $submoeda)
+            $this->miniTesteMoeda($submoeda);
     }
 
     public function miniTesteMoeda($submoeda)
     {
-        $this->assertArrayHasKey('Compra', $submoeda);
-        $this->assertArrayHasKey('Venda', $submoeda);
-        $this->assertArrayHasKey('Var.%', $submoeda);
-        $this->assertArrayHasKey('Hora', $submoeda);
-        $this->assertArrayHasKey('Moeda', $submoeda);
+        $this->assertArrayHasKey('compra', $submoeda->getArrayCopy());
+        $this->assertArrayHasKey('venda', $submoeda->getArrayCopy());
+        $this->assertArrayHasKey('var', $submoeda->getArrayCopy());
+        $this->assertArrayHasKey('hora', $submoeda->getArrayCopy());
+        $this->assertArrayHasKey('moeda', $submoeda->getArrayCopy());
+    }
+
+    public function testWhoisbrDominio()
+    {
+        $whoisbr = ZZ::whoisbr('google.com.br');
+        //amostragem
+        $this->assertArrayHasKey('dominio', $whoisbr->getArrayCopy());
+        $this->assertArrayHasKey('entidade', $whoisbr->getArrayCopy());
+    }
+
+    public function testWhoisbrID()
+    {
+        $whoisbr = ZZ::whoisbr('COAGO');
+        //amostragem
+        $this->assertArrayHasKey('id', $whoisbr->getArrayCopy());
+        $this->assertArrayHasKey('nome', $whoisbr->getArrayCopy());
+        $this->assertArrayHasKey('criado', $whoisbr->getArrayCopy());
+    }
+
+    public function testWhoisbrEntidade()
+    {
+        $whoisbr = ZZ::whoisbr('006.947.284/0001-04');
+        //amostragem
+        $this->assertArrayHasKey('entidade', $whoisbr->getArrayCopy());
+        $this->assertArrayHasKey('criado', $whoisbr->getArrayCopy());
+    }
+
+    public function testTempoPais()
+    {
+        $tempo = ZZ::tempo('brazil');
+        //amostragem
+        $this->assertArrayHasKey('sbsp', $tempo->getArrayCopy());
+        $this->assertArrayHasKey('sbrj', $tempo->getArrayCopy());
+    }
+
+    public function testTempoPaisLocalidade()
+    {
+        $tempo = ZZ::tempo('brazil', 'sbsp');
+        //amostragem
+        $this->assertContains('Congonhas Aeroporto', (string) $tempo);
+    }
+
+    public function testSenha(){
+        $this->assertEquals ( strlen(ZZ::senha()),6);
+        $this->assertEquals ( strlen(ZZ::senha(10)),10);
+    }
+    public function testUniq(){
+        // I can put here a tmp folder but it depends of SO, so the temporary file was create at same dir of tests and delete after.
+        $f = "testeuniq.txt";
+    	exec("printf \"primeiro\nprimeiro\n\" > {$f}");
+        if (is_file($f)){
+        	$ret = ZZ::uniq($f);
+        	$this->assertEquals(count($ret), 1);
+        	$this->assertEquals('primeiro', $ret[0]);
+        	unlink($f);
+        }
+    }
+    public function testCalculaIP(){
+        $calculado = ZZ::calculaip('192.168.0.21', 16);
+        $this->assertEquals($calculaip['end__ip'], '192.168.0.21');
+        $this->assertEquals($calculaip['mascara'], '255.255.0.0 = 16');
+        $this->assertEquals($calculaip['rede'], '192.168.0.0 / 16');
     }
 }
