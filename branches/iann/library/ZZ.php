@@ -147,5 +147,12 @@ abstract class ZZ
             ZZ_ResultSet::TEXTO,
             array($cpf)
         );
+    }
+    public static function cnpj($cnpj=null){
+        return self::funcoeszz(
+            'cnpj',
+            ZZ_ResultSet::TEXTO,
+            array($cnpj)
+        );
     }    
 }
