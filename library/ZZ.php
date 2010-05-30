@@ -140,5 +140,12 @@ abstract class ZZ
             ZZ_ResultSet::TEXTO,
             array($ano)
         );
+    }
+    public static function cpf($cpf=null){
+        return self::funcoeszz(
+            'cpf',
+            ZZ_ResultSet::TEXTO,
+            array($cpf)
+        );
     }    
 }
