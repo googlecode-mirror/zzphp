@@ -152,11 +152,11 @@ class ZZTest extends PHPUnit_Framework_TestCase
         $f = "testecontapalvra.txt";
     	exec("printf \"palavra\nprimeiro\nsegundo\ncod\ncodi\ncodigo\n\" > {$f}");
         if (is_file($f)){
-            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', true, true));
-            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', false, true));
-            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', true, false));
-            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra'));
-            $this->assertEquals(3, (int) ZZ::contapalavra($f, 'cod',     false, true));
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', true, true)->toString());
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', false, true)->toString());
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra', true, false)->toString());
+            $this->assertEquals(1, (int) ZZ::contapalavra($f, 'palavra')->toString());
+            $this->assertEquals(3, (int) ZZ::contapalavra($f, 'cod',     false, true)->toString());
         	unlink($f);
         }
     }
