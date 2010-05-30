@@ -136,4 +136,8 @@ class ZZTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($calculaip['mascara'], '255.255.0.0 = 16');
         $this->assertEquals($calculaip['rede'], '192.168.0.0 / 16');
     }
+    public function testCarnaval(){
+        $this->assertEquals('27/02/1979',   ZZ::carnaval('1979')->toString());
+        $this->assertEquals('16/02/2010',   ZZ::carnaval('2010')->toString());
+    }
 }

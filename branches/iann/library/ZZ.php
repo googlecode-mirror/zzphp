@@ -133,5 +133,12 @@ abstract class ZZ
                 array('--help')
              );
         }
-    }   
+    }
+    public static function carnaval($ano= null){
+        return self::funcoeszz(
+            'carnaval',
+            ZZ_ResultSet::TEXTO,
+            array($ano)
+        );
+    }    
 }
