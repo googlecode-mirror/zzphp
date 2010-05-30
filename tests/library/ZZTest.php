@@ -144,4 +144,9 @@ class ZZTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(strlen(ZZ::cpf()), 14);
         $this->assertEquals(utf8_decode('CPF válido'),utf8_decode(ZZ::cpf('111.111.111-11')));
     }
+    public function testCnpj(){
+        $this->assertEquals(strlen(ZZ::cnpj()), 18);
+        $this->assertEquals(utf8_decode('CNPJ válido'), utf8_decode( ZZ::cnpj('12345678000195') ));
+    }
+    
 }
