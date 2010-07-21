@@ -9,6 +9,7 @@ class ZZ_ResultSet extends ArrayObject
 
     protected $original;
     protected $tratamentoPadrao;
+    protected $cleanerPatterns = Array(' :');
 
     public function __construct($original, $tratamentoPadrao)
     {
@@ -43,6 +44,11 @@ class ZZ_ResultSet extends ArrayObject
         return trim($this->toOriginal());
     }
 
+    public function toString()
+    {
+        return $this->__toString();
+    }
+
     protected function transformArray()
     {
         return new ArrayObject(
@@ -60,6 +66,7 @@ class ZZ_ResultSet extends ArrayObject
             $chaveValor[0] = self::normalizar($chaveValor[0]);
             if (2 !== count($chaveValor))
                 continue;
+            $chaveValor[1] = trim($chaveValor[1], $this->cleanPatterns);
             if (isset($resultados[$chaveValor[0]])) {
                 if (is_array($resultados[$chaveValor[0]])) {
                     $resultados[$chaveValor[0]][] = $chaveValor[1];
