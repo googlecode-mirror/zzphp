@@ -32,6 +32,7 @@ abstract class ZZ
         if (!method_exists('ZZ_ResultSet', $tipoDeResultado)) {
             throw new ZZ_SaidaInvalidaException($tipoDeResultado);
         }
+        $cmd = (defined('ZZPATH'))?ZZPATH:"funcoeszz";
         $shellArgs = implode(' ', $argumentos);
         $zzsaida = shell_exec("funcoeszz $funcao $shellArgs");
         if (false !== strpos($zzsaida, 'Função inexistente')) {
@@ -82,5 +83,89 @@ abstract class ZZ
             array_filter(func_get_args())
         );
     }
+    public static function senha($length=6){
+        return self::funcoeszz(
+            'senha',
+            ZZ_ResultSet::TEXTO,
+            array($length)
+            );
+    }
+    public static function uniq($filepath){
+        return self::funcoeszz(
+            'uniq',
+            ZZ_ResultSet::ARR,
+            array($filepath)
+        );
+    }
+    public static function calcula($expr){
+        return self::funcoeszz(
+            'calcula',
+            ZZ_ResultSet::TEXTO,
+            array($expr)
+        );
+    }
+    public static function calculaip($ip, $netmask=null){
+        $param = Array($ip, $netmask);
+        return  self::funcoeszz(
+            'calculaip',
+            ZZ_ResultSet::LISTA,
+            $param
+        );
+    }
+    public static function ajuda($fct=null){
+        /* 
+            this function just make sense to return text
+            Every function from zz have your own help, make sense use this function to provide these help for functions and system.
+        */
+        if ( is_null($fct)){
+            return self::funcoeszz(
+              'ajuda',
+              ZZ_ResultSet::TEXTO
+            );
+        }else{
+            $rclass = new ReflectionClass('ZZ');
+            if (!$rclass->hasMethod($fct))
+                throw new ZZ_FuncaoInvalidaException($fct, 3);
+
+            return self::funcoeszz(
+                $fct,
+                ZZ_ResultSet::TEXTO,
+                array('--help')
+             );
+        }
+    }
+    public static function carnaval($ano= null){
+        return self::funcoeszz(
+            'carnaval',
+            ZZ_ResultSet::TEXTO,
+            array($ano)
+        );
+    }
+    public static function cpf($cpf=null){
+        return self::funcoeszz(
+            'cpf',
+            ZZ_ResultSet::TEXTO,
+            array($cpf)
+        );
+    }
+    public static function cnpj($cnpj=null){
+        return self::funcoeszz(
+            'cnpj',
+            ZZ_ResultSet::TEXTO,
+            array($cnpj)
+        );
+    }
+    public static function contapalavra($filepath,$word, $ignoreCase=false, $partial=false){
+        $param = Array();
+        ($ignoreCase)?array_push($param, '-i'):"";
+        ($partial)?array_push($param, '-p'):"";
+        array_push($param, $word);
+        array_push($param, $filepath);
+        return self::funcoeszz(
+            'contapalavra',
+            ZZ_ResultSet::TEXTO,
+            $param
+        );
+    }    
 
 }
